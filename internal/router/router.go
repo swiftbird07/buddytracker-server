@@ -13,9 +13,14 @@ func NewRouter() *chi.Mux {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
+	r.Use(mdlwr.Logger)
 	r.Use(middleware.StripSlashes)
 
 	r.Route("/api/v1", func(r chi.Router) {
+		r.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+		})
+
 		r.Route("/auth", func(r chi.Router) {
 			r.Post("/register", handler.Register)                          // Register
 			r.Post("/", func(w http.ResponseWriter, r *http.Request) {})   // Login
