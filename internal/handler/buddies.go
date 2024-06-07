@@ -17,11 +17,16 @@ type User struct {
 }
 
 type Status struct {
-	Status           string   `json:"status"`
-	Activities       []string `json:"activities"`
-	Location         Location `json:"location"`
-	LocationAccuracy int      `json:"locationAccuracy"`
-	ExpiresAt        int64    `json:"expiresAt"`
+	Status           string     `json:"status"`
+	Activities       []Activity `json:"activities"`
+	Location         Location   `json:"location"`
+	LocationAccuracy int        `json:"locationAccuracy"`
+	ExpiresAt        int64      `json:"expiresAt"`
+}
+
+type Activity struct {
+	Custom   bool   `json:"custom"`
+	Activity string `json:"activity"`
 }
 
 type Location struct {
@@ -36,8 +41,16 @@ func ListBuddies(w http.ResponseWriter, r *http.Request) {
 				Id:   "1",
 				Name: "Bob Smith",
 				Status: Status{
-					Status:     "Open for Activities",
-					Activities: []string{"Going to the Beach", "Clubbing"},
+					Status: "Open for Activities",
+					Activities: []Activity{{
+						Custom:   true,
+						Activity: "Going to the Beach",
+					},
+						{
+							Custom:   true,
+							Activity: "Clubbing",
+						},
+					},
 					Location: Location{
 						Latitude:  54.118751,
 						Longitude: 12.201846,
@@ -52,8 +65,13 @@ func ListBuddies(w http.ResponseWriter, r *http.Request) {
 				Id:   "2",
 				Name: "Charlie Miles",
 				Status: Status{
-					Status:     "Join me!",
-					Activities: []string{"Studying"},
+					Status: "Join me!",
+					Activities: []Activity{
+						{
+							Custom:   false,
+							Activity: "studying",
+						},
+					},
 					Location: Location{
 						Latitude:  49.405880,
 						Longitude: 8.688515,
@@ -69,7 +87,7 @@ func ListBuddies(w http.ResponseWriter, r *http.Request) {
 				Name: "Alice Johnson",
 				Status: Status{
 					Status:     "Open for Activities",
-					Activities: []string{},
+					Activities: []Activity{},
 					Location: Location{
 						Latitude:  51.360806,
 						Longitude: 13.024071,

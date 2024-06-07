@@ -29,7 +29,7 @@ func NewRouter() *chi.Mux {
 			})
 		})
 
-		r.Route("/user", func(r chi.Router) {
+		r.Route("/users", func(r chi.Router) {
 			r.Post("/", func(w http.ResponseWriter, r *http.Request) {}) // (By code)
 			r.Route("/{user-id}", func(r chi.Router) {
 				r.Get("/", func(w http.ResponseWriter, r *http.Request) {})      // Friends
@@ -43,6 +43,10 @@ func NewRouter() *chi.Mux {
 					r.Put("/", func(w http.ResponseWriter, r *http.Request) {}) // Self
 				})
 			})
+		})
+
+		r.Route("/activities", func(r chi.Router) {
+			r.Get("/", handler.ListActivities)
 		})
 	})
 
