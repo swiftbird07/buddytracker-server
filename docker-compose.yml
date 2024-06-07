@@ -1,0 +1,33 @@
+services:
+  database:
+    image: postgres:latest
+    restart: unless-stopped
+    expose:
+      - 5432
+    env_file:
+      - .env
+    networks:
+      - postgres-network
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
+  buddytracker:
+    image: 'buddytracker:latest'
+    restart: unless-stopped
+    ports:
+      - 3001:3001
+    env_file:
+      - .env
+    depends_on:
+      - database
+    networks:
+      - postgres-network
+
+networks: 
+  postgres-network:
+    driver: bridge
