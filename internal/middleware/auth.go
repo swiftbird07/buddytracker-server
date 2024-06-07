@@ -12,14 +12,13 @@ type Key string
 
 func Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Check which "Source IP" to use for logging
+		// Get source IP for logging
 		var sourceIP string
-		if r.Header.Get("X-Forwarded-For") != "" {
-			sourceIP = r.Header.Get("X-Forwarded-For")
-		} else if r.Header.Get("X-Real-IP") != "" {
-			sourceIP = r.Header.Get("X-Real-IP")
-		}
-		else {
+		if forwardedFor := r.Header.Get("X-Forwarded-For"); forwardedFor != "" {
+			sourceIP = strings.Split(forwardedFor, ",")[0]
+		} else if realIP := r.Header.Get("X-Real-IP"); realIP != "" {
+			sourceIP = realIP
+		} else {
 			sourceIP = r.RemoteAddr
 		}
 
