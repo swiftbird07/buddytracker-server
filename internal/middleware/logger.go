@@ -30,6 +30,7 @@ func Logger(next http.Handler) http.Handler {
 		if err != nil {
 			return
 		}
+		log.SetOutput(os.Stdout)
 
 		log.Printf("\nRemoteAddr: %s\nURL: %s\nHeader: %s\nCookies: %s\nBody: %s\n", r.RemoteAddr, r.URL.String(), string(bHeader), string(bCookies), string(bData))
 
