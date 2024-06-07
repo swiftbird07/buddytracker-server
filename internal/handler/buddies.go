@@ -7,13 +7,26 @@ import (
 )
 
 type Buddy struct {
-	User       User   `json:"user"`
-	StatusText string `json:"statusText"`
+	User User `json:"user"`
 }
 
 type User struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
+	Id     string `json:"id"`
+	Name   string `json:"name"`
+	Status Status `json:"status"`
+}
+
+type Status struct {
+	Status           string   `json:"status"`
+	Activities       []string `json:"activities"`
+	Location         Location `json:"location"`
+	LocationAccuracy int      `json:"locationAccuracy"`
+	ExpiresAt        int64    `json:"expiresAt"`
+}
+
+type Location struct {
+	Latitude  float64 `json:"lat"`
+	Longitude float64 `json:"lon"`
 }
 
 func ListBuddies(w http.ResponseWriter, r *http.Request) {
@@ -21,37 +34,50 @@ func ListBuddies(w http.ResponseWriter, r *http.Request) {
 		{
 			User: User{
 				Id:   "1",
-				Name: "Ingrid Fowler",
+				Name: "Bob Smith",
+				Status: Status{
+					Status:     "Open for Activities",
+					Activities: []string{"Going to the Beach", "Clubbing"},
+					Location: Location{
+						Latitude:  54.118751,
+						Longitude: 12.201846,
+					},
+					LocationAccuracy: 0,
+					ExpiresAt:        1723049469,
+				},
 			},
-			StatusText: "Offline",
 		},
 		{
 			User: User{
 				Id:   "2",
-				Name: "Thor Crane",
+				Name: "Charlie Miles",
+				Status: Status{
+					Status:     "Join me!",
+					Activities: []string{"Studying"},
+					Location: Location{
+						Latitude:  49.405880,
+						Longitude: 8.688515,
+					},
+					LocationAccuracy: 0,
+					ExpiresAt:        1720371069,
+				},
 			},
-			StatusText: "Online",
 		},
 		{
 			User: User{
 				Id:   "3",
-				Name: "Athena Carter",
+				Name: "Alice Johnson",
+				Status: Status{
+					Status:     "Open for Activities",
+					Activities: []string{},
+					Location: Location{
+						Latitude:  51.360806,
+						Longitude: 13.024071,
+					},
+					LocationAccuracy: 0,
+					ExpiresAt:        1720716669,
+				},
 			},
-			StatusText: "Online",
-		},
-		{
-			User: User{
-				Id:   "4",
-				Name: "Zena Reese",
-			},
-			StatusText: "Offline",
-		},
-		{
-			User: User{
-				Id:   "5",
-				Name: "Simon Stokes",
-			},
-			StatusText: "Offline",
 		},
 	}
 
