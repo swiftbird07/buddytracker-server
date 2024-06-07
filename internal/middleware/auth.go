@@ -25,7 +25,7 @@ func Auth(next http.Handler) http.Handler {
 
 		// Check if User Agent starts with "Buddy Tracker"
 		if !strings.HasPrefix(r.UserAgent(), "Buddy Tracker") {
-			log.Println("Buddy Tracker Server - Auth Fail - User-Agent mismatch for incoming connection (Source IP: ", sourceIP+". User-Agent: ", r.UserAgent()+").")
+			log.Println("Buddy Tracker Server - Auth Fail - User-Agent mismatch for incoming connection (Source IP:", sourceIP+". User-Agent:", r.UserAgent()+").")
 			http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 			return
 		}
@@ -34,7 +34,7 @@ func Auth(next http.Handler) http.Handler {
 		authHeader := r.Header.Get("Authorization")
 		token, found := strings.CutPrefix(authHeader, "Bearer ")
 		if !found {
-			log.Println("Buddy Tracker Server - Auth Fail - No token found in Authorization header for incoming connection (Source IP: ", sourceIP+". User-Agent: ", r.UserAgent()+").")
+			log.Println("Buddy Tracker Server - Auth Fail - No token found in Authorization header for incoming connection (Source IP:", sourceIP+". User-Agent:", r.UserAgent()+").")
 			http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 			return
 		}
@@ -43,12 +43,12 @@ func Auth(next http.Handler) http.Handler {
 		validSession, user := controller.ValidToken(token)
 
 		if !validSession {
-			log.Println("Buddy Tracker Server - Auth Fail - Authentication failed for incoming connection (Source IP: ", sourceIP+". User-Agent: ", r.UserAgent()+").")
+			log.Println("Buddy Tracker Server - Auth Fail - Authentication failed for incoming connection (Source IP:", sourceIP+". User-Agent:", r.UserAgent()+").")
 			http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 			return
 		} else {
 			// Get username
-			log.Println("Buddy Tracker Server - Auth Success - Authentication successful for incoming connection. (User: ", user.Name+", Source IP: ", sourceIP+". User-Agent: ", r.UserAgent()+").")
+			log.Println("Buddy Tracker Server - Auth Success - Authentication successful for incoming connection. (User:", user.Name+", Source IP:", sourceIP+". User-Agent:", r.UserAgent()+").")
 			ctx := context.WithValue(r.Context(), Key("user"), user)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		}
