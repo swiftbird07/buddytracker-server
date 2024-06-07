@@ -34,7 +34,7 @@ func NewUser(udid string, name string) (User, error) {
 	newUser := User{
 		Id:         utils.GenerateId(10, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
 		udid:       udid,
-		token:      utils.GenerateId(20, "0123456789abcdefghijklmnopqrstuvwxyz"),
+		token:      "1234", // utils.GenerateId(20, "0123456789abcdefghijklmnopqrstuvwxyz")
 		Name:       name,
 		FriendCode: FriendCode{Code: utils.GenerateId(8, "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ"), CreatedAt: time.Time{}},
 		CreatedAt:  time.Now(),
