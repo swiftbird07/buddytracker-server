@@ -13,10 +13,12 @@ type Key string
 func Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Check which "Source IP" to use for logging
+		var sourceIP string
 		if r.Header.Get("X-Forwarded-For") != "" {
 			sourceIP = r.Header.Get("X-Forwarded-For")
 		} else if r.Header.Get("X-Real-IP") != "" {
 			sourceIP = r.Header.Get("X-Real-IP")
+		}
 		else {
 			sourceIP = r.RemoteAddr
 		}
@@ -45,7 +47,7 @@ func Auth(next http.Handler) http.Handler {
 			http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 			return
 		} else {
-			log.Println("Buddy Tracker Server - Auth Success - Authentication successful for incoming connection. (User:", user + ", Source IP:", sourceIP + ". User-Agent:", r.UserAgent() + ")."
+			log.Println("Buddy Tracker Server - Auth Success - Authentication successful for incoming connection. (User:", user + ", Source IP:", sourceIP + ". User-Agent:", r.UserAgent() + ").")
 			ctx := context.WithValue(r.Context(), Key("user"), user)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		}
