@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"encoding/json"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -37,18 +36,13 @@ func Logger(next http.Handler) http.Handler {
 			return
 		}
 
-		bData, err := io.ReadAll(r.Body)
-		if err != nil {
-			return
-		}
-
 		bCookies, err := json.MarshalIndent(r.Cookies(), "", "  ")
 		if err != nil {
 			return
 		}
 		log.SetOutput(os.Stdout)
 
-		log.Printf("\nRemoteAddr: %s\nParsed IP: %s\nURL: %s\nHeader: %s\nCookies: %s\nBody: %s\n", r.RemoteAddr, sourceIP, r.URL.String(), string(bHeader), string(bCookies), string(bData))
+		log.Printf("\nRemoteAddr: %s\nParsed IP: %s\nURL: %s\nHeader: %s\nCookies: %s\n", r.RemoteAddr, sourceIP, r.URL.String(), string(bHeader), string(bCookies))
 
 		next.ServeHTTP(w, r)
 	})
