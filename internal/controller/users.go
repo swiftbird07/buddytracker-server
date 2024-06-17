@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/swiftbird07/buddytracker-server/utils"
@@ -27,14 +28,14 @@ type FriendCode struct {
 func NewUser(udid string, name string) (User, error) {
 	for _, user := range users {
 		if user.udid == udid {
-			return user, nil
+			return User{}, fmt.Errorf("user already exists")
 		}
 	}
 
 	newUser := User{
 		Id:         utils.GenerateId(10, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
 		udid:       udid,
-		token:      "1234", // utils.GenerateId(20, "0123456789abcdefghijklmnopqrstuvwxyz")
+		token:      utils.GenerateId(20, "0123456789abcdefghijklmnopqrstuvwxyz"),
 		Name:       name,
 		FriendCode: FriendCode{Code: utils.GenerateId(8, "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ"), CreatedAt: time.Time{}},
 		CreatedAt:  time.Now(),
@@ -49,6 +50,16 @@ func NewUser(udid string, name string) (User, error) {
 func (u *User) ChangeName(name string) {
 	u.Name = name
 	u.UpdatedAt = time.Now()
+}
+
+func GetUser(udid string) (User, error) {
+	for _, user := range users {
+		if user.udid == udid {
+			return user, nil
+		}
+	}
+
+	return User{}, fmt.Errorf("udid not found")
 }
 
 func (u *User) GetToken() string {

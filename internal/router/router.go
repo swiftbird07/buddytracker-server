@@ -22,9 +22,8 @@ func NewRouter() *chi.Mux {
 		})
 
 		r.Route("/auth", func(r chi.Router) {
-			r.Post("/register", handler.Register)                          // Register
-			r.Post("/", func(w http.ResponseWriter, r *http.Request) {})   // Login
-			r.Delete("/", func(w http.ResponseWriter, r *http.Request) {}) // Terminate session
+			r.Post("/register", handler.Register) // Register
+			r.Post("/", handler.Login)            // Login
 		})
 
 		r.Route("/", func(r chi.Router) {

@@ -48,3 +48,43 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	w.Write(bRes)
 	w.WriteHeader(http.StatusOK)
 }
+
+type ReqUDIDLogin struct {
+	UDID string `json:"udid"`
+}
+
+type ResUDIDLogin struct {
+	Token string `json:"token"`
+}
+
+func Login(w http.ResponseWriter, r *http.Request) {
+	req := ReqUDIDLogin{}
+
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	user, err := controller.GetUser(req.UDID)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	res := ResUDIDLogin{
+		Token: user.GetToken(),
+	}
+
+	bRes, err := json.Marshal(res)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Write(bRes)
+	w.WriteHeader(http.StatusOK)
+}
